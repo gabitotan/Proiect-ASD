@@ -112,6 +112,11 @@ void parcurgere()
         strcpy(z,encID(r->id));
         strcpy(tab[j].id_enc,z);
         tab[j].pntr=r;
+        int sum=0, p;
+        for(p=0;p<strlen(tab[j].id_enc);p++)
+            {int f=tab[j].id_enc[p];
+            sum=sum + f;}
+        tab[j].numar_nod=sum;
 
        // printf("\nCuvant: %s\tID: %s\tID_E: %s\n",r->cuv,r->id,tab[j].id_enc);
         r=r->urm;
@@ -125,6 +130,26 @@ void afisare(int n)
     for (i=1;i<=n;i++)
         printf("Cuvantul %d: %s\nID: %s\tID Encriptat: %s\n\n",i,tab[i].pntr->cuv,tab[i].pntr->id,tab[i].id_enc);
 
+}
+
+void InsertHeap(int n, int x)
+{
+    int fiu=++n;
+    int tata=n/2;
+    while(tata && tab[tata].numar_nod<x)
+    {
+        tab[fiu].numar_nod=tab[tata].numar_nod;
+        fiu=tata;
+        tata=fiu/2;
+    }
+    tab[fiu].numar_nod=x;
+}
+
+void CreareHeap()
+{
+    int i;
+    for(i=2;i<=size;i++)
+        InsertHeap(i-1, tab[i].numar_nod);
 }
 
 int main()
@@ -205,7 +230,7 @@ int main()
                     printf(", %d",k);
             strcpy(aux,decID(tab[i].id_enc,k));
             if( strcmp(aux,tab[i].pntr->id)==0 )
-                {printf("\nS-a decriptat cuvantul %d cu cheia %d\nCuvantul este: %s\n\n",i,k,tab[i].pntr->cuv);
+                {printf("\nS-a decriptat cuvantul %d cu cheia %d\nCuvantul este: %s,cu o frecventa de %d\n\n",i,k,tab[i].pntr->cuv,tab[i].numar_nod);
                 ex++;
                 break;
                 }
